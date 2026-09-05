@@ -252,7 +252,7 @@ final class ExtensionRPCServer {
     private func handleListenerState(_ state: NWListener.State, host: NWEndpoint.Host) {
         switch state {
         case .ready:
-            Logger.log("Started Atoll RPC WebSocket server on \(host):\(port)", category: .extensions)
+            Logger.log("Started Crest RPC WebSocket server on \(host):\(port)", category: .extensions)
         case .failed(let error):
             Logger.log(
                 "RPC server on \(host) failed: \(error.localizedDescription)",

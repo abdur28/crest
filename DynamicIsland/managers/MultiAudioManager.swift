@@ -561,7 +561,7 @@ class MultiAudioManager: ObservableObject {
         guard AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &size, &deviceIDs) == noErr else { return }
 
         for deviceID in deviceIDs {
-            guard let name = name(for: deviceID), let uid = getDeviceUID(for: deviceID), !name.hasPrefix("Atoll-") else { continue }
+            guard let name = name(for: deviceID), let uid = getDeviceUID(for: deviceID), !name.hasPrefix("Crest-") else { continue }
             if shouldHideVirtualDevice(name: name, uid: uid) { continue }
 
             let isInput = hasChannels(for: deviceID, scope: kAudioObjectPropertyScopeInput)
@@ -799,7 +799,7 @@ class AppTapController {
         guard err == noErr else { throw NSError(domain: "TapError", code: Int(err)) }
 
         let aggDesc: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "Atoll-\(bundleID.split(separator: ".").last ?? "App")",
+            kAudioAggregateDeviceNameKey: "Crest-\(bundleID.split(separator: ".").last ?? "App")",
             kAudioAggregateDeviceUIDKey: UUID().uuidString, kAudioAggregateDeviceMainSubDeviceKey: targetDeviceUID,
             kAudioAggregateDeviceClockDeviceKey: targetDeviceUID, kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceIsStackedKey: true, kAudioAggregateDeviceTapAutoStartKey: true,

@@ -31,7 +31,7 @@ enum AppleNotesSyncError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .automationDenied:
-            return String(localized: "Allow Atoll to control Notes in System Settings → Privacy & Security → Automation.")
+            return String(localized: "Allow Crest to control Notes in System Settings → Privacy & Security → Automation.")
         case .scriptFailed(let message):
             return message
         }

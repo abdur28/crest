@@ -129,7 +129,7 @@ final class CaffeineManager: ObservableObject {
         let result = IOPMAssertionCreateWithName(
             assertionType as CFString,
             IOPMAssertionLevel(kIOPMAssertionLevelOn),
-            "Atoll keep-awake" as CFString,
+            "Crest keep-awake" as CFString,
             &newID
         )
 

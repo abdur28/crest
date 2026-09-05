@@ -81,7 +81,7 @@ struct UpdateNotFoundView: View {
 
             // Version info
             VStack(spacing: 6) {
-                Text("Atoll \(Bundle.main.releaseVersionNumber ?? "Unknown")")
+                Text("Crest \(Bundle.main.releaseVersionNumber ?? "Unknown")")
                     .font(.subheadline)
                     .foregroundStyle(.primary)
 
@@ -96,7 +96,7 @@ struct UpdateNotFoundView: View {
             .opacity(showCheckmark ? 1.0 : 0)
             .animation(.easeIn(duration: 0.3).delay(0.5), value: showCheckmark)
 
-            Text("Atoll will automatically check for updates periodically.")
+            Text("Crest will automatically check for updates periodically.")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)

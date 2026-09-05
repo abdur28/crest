@@ -141,7 +141,7 @@ struct ExtensionsSettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                Text("Enable extensions to allow third-party apps to display live activities and lock screen widgets in Atoll.")
+                Text("Enable extensions to allow third-party apps to display live activities and lock screen widgets in Crest.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

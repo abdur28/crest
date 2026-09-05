@@ -108,7 +108,7 @@ struct SpotifyAuthSettingsSection: View {
         } header: {
             Text("Spotify Canvas Session")
         } footer: {
-            Text("Atoll uses the local `sp_dc` cookie only to request Spotify's internal web-player token and fetch the matching Canvas for the current track.")
+            Text("Crest uses the local `sp_dc` cookie only to request Spotify's internal web-player token and fetch the matching Canvas for the current track.")
                 .foregroundStyle(.secondary)
                 .font(.caption)
         }
