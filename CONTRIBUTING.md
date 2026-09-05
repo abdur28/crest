@@ -1,5 +1,5 @@
 <p align="center">
-	<img src=".github/assets/atoll-logo.png" alt="Atoll logo" width="100">
+	<img src=".github/assets/crest-logo.png" alt="Crest logo" width="100">
 </p>
 
 # Contributing to Crest
