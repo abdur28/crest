@@ -2,9 +2,11 @@
 	<img src=".github/assets/atoll-logo.png" alt="Atoll logo" width="100">
 </p>
 
-# Contributing to Atoll
+# Contributing to Crest
 
-Thank you for your interest in contributing to Atoll! We welcome contributions from everyone—developers, designers, testers, and documentation writers. Please read the following guidelines to help us maintain a collaborative and high-quality project.
+> **Crest is a fork of [Atoll](https://github.com/Ebullioscopic/Atoll) by Ebullioscopic**, maintained by Bytesphere. Heartfelt appreciation to the Atoll team — these guidelines are inherited from their project. If your contribution is broadly useful, please consider sending it **upstream to [Atoll](https://github.com/Ebullioscopic/Atoll)** so the whole community benefits. 💙
+
+Thank you for your interest in contributing to Crest! We welcome contributions from everyone—developers, designers, testers, and documentation writers. Please read the following guidelines to help us maintain a collaborative and high-quality project.
 
 ## Table of Contents
 - [How to Contribute](#how-to-contribute)
@@ -42,8 +44,8 @@ We are committed to fostering a welcoming and inclusive environment. Please read
 	- MacBook with a notch (for full feature testing)
 - **Clone the repo:**
 	```bash
-	git clone https://github.com/Ebullioscopic/Atoll.git
-	cd Atoll
+	git clone https://github.com/abdur28/crest.git
+	cd crest
 	open DynamicIsland.xcodeproj
 	```
 - **Build & Run:**
@@ -94,4 +96,4 @@ We are committed to fostering a welcoming and inclusive environment. Please read
 
 ---
 
-Thank you for helping make Atoll better!
+Thank you for helping make Crest better — and thanks to Atoll for making it possible!
