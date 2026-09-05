@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +54,7 @@ final class AppleNotesSyncManager: ObservableObject {
     @Published private(set) var isSyncing = false
     @Published private(set) var lastError: String?
 
-    private static let syncFolderName = "Atoll"
+    private static let syncFolderName = "Crest"
     private static let fieldSeparator = "\u{241F}"
     private static let recordSeparator = "\u{241E}"
     private static let atollTagPattern = #"<!--atoll:id=([0-9A-Fa-f-]{36})-->"#

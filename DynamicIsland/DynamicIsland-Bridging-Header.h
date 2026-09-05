@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Swift bridging header for Objective-C/C++ code.
  *

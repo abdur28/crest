@@ -49,6 +49,7 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
     case general
     case liveActivities
     case appearance
+    case notchHeader
     case lockScreen
     case media
     case devices
@@ -57,6 +58,8 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
     case calendar
     case hudAndOSD
     case battery
+    case keepAwake
+    case multiAudio
     case stats
     case clipboard
     case screenAssistant
@@ -73,9 +76,9 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
     /// Which sidebar group this tab belongs to.
     var group: SettingsTabGroup {
         switch self {
-        case .general, .appearance:                                          return .core
+        case .general, .appearance, .notchHeader:                            return .core
         case .media, .liveActivities, .lockScreen, .devices:                 return .mediaAndDisplay
-        case .hudAndOSD, .battery:                                           return .system
+        case .hudAndOSD, .battery, .keepAwake, .multiAudio:                  return .system
         case .timer, .calendar, .notes:                                      return .productivity
         case .clipboard, .screenAssistant, .colorPicker, .shelf,
              .downloads, .shortcuts:                                         return .utilities
@@ -90,6 +93,7 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .general: return String(localized: "General")
         case .liveActivities: return String(localized: "Live Activities")
         case .appearance: return String(localized: "Appearance")
+        case .notchHeader: return String(localized: "Notch Header")
         case .lockScreen: return String(localized: "Lock Screen")
         case .media: return String(localized: "Media")
         case .devices: return String(localized: "Devices")
@@ -98,6 +102,8 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .calendar: return String(localized: "Calendar")
         case .hudAndOSD: return String(localized: "Controls")
         case .battery: return String(localized: "Battery")
+        case .keepAwake: return String(localized: "Keep Awake")
+        case .multiAudio: return String(localized: "Multi-Audio")
         case .stats: return String(localized: "Stats")
         case .clipboard: return String(localized: "Clipboard")
         case .screenAssistant: return String(localized: "Screen Assistant")
@@ -116,6 +122,7 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .general: return "gear"
         case .liveActivities: return "waveform.path.ecg"
         case .appearance: return "paintpalette"
+        case .notchHeader: return "menubar.rectangle"
         case .lockScreen: return "lock.laptopcomputer"
         case .media: return "play.laptopcomputer"
         case .devices: return "headphones"
@@ -124,6 +131,8 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .calendar: return "calendar"
         case .hudAndOSD: return "dial.medium.fill"
         case .battery: return "battery.100.bolt"
+        case .keepAwake: return "cup.and.saucer.fill"
+        case .multiAudio: return "hifispeaker.2.fill"
         case .stats: return "chart.xyaxis.line"
         case .clipboard: return "clipboard"
         case .screenAssistant: return "brain.head.profile"
@@ -142,6 +151,7 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .general: return .blue
         case .liveActivities: return .pink
         case .appearance: return .purple
+        case .notchHeader: return Color(red: 0.30, green: 0.64, blue: 0.93)
         case .lockScreen: return .orange
         case .media: return .green
         case .devices: return Color(red: 0.1, green: 0.11, blue: 0.12)
@@ -150,6 +160,8 @@ private enum SettingsTab: String, CaseIterable, Identifiable {
         case .calendar: return .cyan
         case .hudAndOSD: return .indigo
         case .battery: return Color(red: 0.202, green: 0.783, blue: 0.348, opacity: 1.000)
+        case .keepAwake: return Color(red: 0.979, green: 0.716, blue: 0.153, opacity: 1.000)
+        case .multiAudio: return Color(red: 0.35, green: 0.34, blue: 0.84, opacity: 1.000)
         case .stats: return .teal
         case .clipboard: return .mint
         case .screenAssistant: return .pink
@@ -789,6 +801,7 @@ struct SettingsView: View {
             // Core
             .general,
             .appearance,
+            .notchHeader,
             // Media & Display
             .media,
             .liveActivities,
@@ -797,6 +810,8 @@ struct SettingsView: View {
             // System
             .hudAndOSD,
             .battery,
+            .keepAwake,
+            .multiAudio,
             // Productivity
             .timer,
             .calendar,
@@ -1025,6 +1040,10 @@ struct SettingsView: View {
             SettingsForm(tab: .appearance) {
                 Appearance()
             }
+        case .notchHeader:
+            SettingsForm(tab: .notchHeader) {
+                NotchHeaderSettings()
+            }
         case .lockScreen:
             SettingsForm(tab: .lockScreen) {
                 LockScreenSettings()
@@ -1056,6 +1075,14 @@ struct SettingsView: View {
         case .battery:
             SettingsForm(tab: .battery) {
                 Charge()
+            }
+        case .keepAwake:
+            SettingsForm(tab: .keepAwake) {
+                KeepAwakeSettings()
+            }
+        case .multiAudio:
+            SettingsForm(tab: .multiAudio) {
+                MultiAudioSettings()
             }
         case .stats:
             SettingsForm(tab: .stats) {
@@ -1104,6 +1131,396 @@ struct SettingsView: View {
                 }
             }
         }
+    }
+}
+
+struct NotchHeaderSettings: View {
+    @Default(.notchHeaderItemOrder) var order
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Notch Header Layout")
+                    .font(.headline)
+                Text("Drag the handle to reorder. Items above the **Notch (divider)** appear to the left of the notch; items below appear to the right. Toggle to show or hide each one — turning a tab off disables its feature.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                ReorderableVStack(items: $order, rowHeight: 40) { item in
+                    row(for: item)
+                }
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.primary.opacity(0.04))
+                )
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .onAppear {
+            // Clean up any duplicates/missing items once so the list is stable.
+            order = NotchHeaderItem.sanitized(order)
+        }
+    }
+
+    @ViewBuilder
+    private func row(for item: NotchHeaderItem) -> some View {
+        Image(systemName: item.systemImage)
+            .frame(width: 20)
+            .foregroundStyle(item.isDivider ? .secondary : .primary)
+
+        Text(item.displayName)
+            .foregroundStyle(item.isDivider ? .secondary : .primary)
+
+        Spacer()
+
+        if let key = item.visibilityKey {
+            Defaults.Toggle(key: key) { EmptyView() }
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.small)
+        } else if item.isDivider {
+            Text("The notch")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        } else if item == .home {
+            Text("Always shown")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
+struct KeepAwakeSettings: View {
+    @ObservedObject private var caffeine = CaffeineManager.shared
+    @Default(.showCaffeineInNotch) var showCaffeineInNotch
+    @Default(.caffeinateKeepDisplayAwake) var keepDisplayAwake
+    @Default(.caffeinateTimeoutMinutes) var timeoutMinutes
+
+    private func highlightID(_ title: String) -> String {
+        SettingsTab.keepAwake.highlightID(for: title)
+    }
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle(isOn: Binding(
+                    get: { caffeine.isActive },
+                    set: { isOn in
+                        if isOn {
+                            caffeine.activate(timeoutMinutes: timeoutMinutes)
+                        } else {
+                            caffeine.deactivate()
+                        }
+                    }
+                )) {
+                    Text("Keep Awake")
+                }
+                .settingsHighlight(id: highlightID("Keep Awake"))
+
+                if caffeine.isActive, let endsAt = caffeine.timeoutEndsAt {
+                    HStack {
+                        Text("Turns off automatically")
+                        Spacer()
+                        Text(endsAt, style: .time)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Keep Awake")
+            } footer: {
+                Text("Prevents your Mac from going to sleep. Uses a power-management assertion — the same mechanism as the built-in caffeinate tool.")
+            }
+
+            Section {
+                Picker("Auto-off timeout", selection: $timeoutMinutes) {
+                    ForEach(CaffeineManager.timeoutPresets, id: \.self) { minutes in
+                        Text(CaffeineManager.timeoutLabel(forMinutes: minutes)).tag(minutes)
+                    }
+                }
+                .onChange(of: timeoutMinutes) { _, newValue in
+                    if caffeine.isActive {
+                        caffeine.activate(timeoutMinutes: newValue)
+                    }
+                }
+                .settingsHighlight(id: highlightID("Auto-off timeout"))
+
+                Defaults.Toggle(key: .caffeinateKeepDisplayAwake) {
+                    Text("Keep display awake")
+                }
+                .onChange(of: keepDisplayAwake) { _, newValue in
+                    caffeine.setKeepDisplayAwake(newValue)
+                }
+                .settingsHighlight(id: highlightID("Keep display awake"))
+            } header: {
+                Text("Behavior")
+            } footer: {
+                Text("When off, the system stays awake but the display may still sleep.")
+            }
+
+            Section {
+                Defaults.Toggle(key: .showCaffeineInNotch) {
+                    Text("Show in notch header")
+                }
+                .settingsHighlight(id: highlightID("Show in notch header"))
+            } header: {
+                Text("Appearance")
+            } footer: {
+                Text("Adds a Keep Awake toggle button to the expanded notch header.")
+            }
+        }
+    }
+}
+
+struct MultiAudioSettings: View {
+    @ObservedObject private var manager = MultiAudioManager.shared
+    @State private var activeBundleIDs: [String] = []
+    @State private var perAppRevision = 0
+    @State private var showResetAppConfirmation = false
+
+    var body: some View {
+        Form {
+            if !manager.hasCapturePermission {
+                Section {
+                    HStack {
+                        Label("Screen Recording permission needed", systemImage: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Button("Grant…") { manager.requestCapturePermission() }
+                    }
+                } footer: {
+                    Text("Atoll taps each app's audio to route it to multiple outputs, which macOS gates behind Screen Recording permission. No screen content is recorded.")
+                }
+            }
+
+            Section {
+                if manager.availableOutputDevices.isEmpty {
+                    Text("No output devices found.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(manager.availableOutputDevices) { device in
+                        Toggle(isOn: binding(for: device)) {
+                            Label(device.name, systemImage: iconName(for: device))
+                        }
+                    }
+                }
+            } header: {
+                Text("Play to these outputs")
+            } footer: {
+                Text("Select two or more devices to play audio to all of them at once. With one selected, audio is routed there; with none selected, the system default is used. Per-app volume/EQ is applied when tapping is active.")
+            }
+
+            Section {
+                if activeBundleIDs.isEmpty {
+                    ContentUnavailableView(
+                        "No active app audio",
+                        systemImage: "waveform",
+                        description: Text("Start playback in an app to adjust its volume, mute, and EQ.")
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                } else {
+                    ForEach(activeBundleIDs, id: \.self) { bundleID in
+                        MultiAudioAppControlRow(bundleID: bundleID, revision: perAppRevision)
+                    }
+                }
+            } header: {
+                HStack {
+                    Text("Per-App Controls")
+                    Spacer()
+                    if !activeBundleIDs.isEmpty {
+                        Button("Reset All") { showResetAppConfirmation = true }
+                            .buttonStyle(.borderless)
+                            .foregroundStyle(.red)
+                    }
+                }
+            } footer: {
+                Text("Changes persist per app and apply while Atoll is tapping that app's audio.")
+            }
+        }
+        .onAppear(perform: refreshActiveApps)
+        .onReceive(NotificationCenter.default.publisher(for: .multiAudioActiveBundlesDidChange)) { _ in
+            refreshActiveApps()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .perAppAudioSettingsDidChange)) { _ in
+            perAppRevision += 1
+        }
+        .alert("Reset Per-App Settings?", isPresented: $showResetAppConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Reset", role: .destructive) {
+                PerAppAudioController.shared.clearAllPersistedState()
+                MultiAudioManager.shared.notifyAdjustmentMade(for: "ResetAll")
+                perAppRevision += 1
+            }
+        } message: {
+            Text("This restores default volume, mute, and EQ for every application.")
+        }
+    }
+
+    private func refreshActiveApps() {
+        activeBundleIDs = manager.activeAudioBundleIDs().sorted { lhs, rhs in
+            appDisplayName(for: lhs).localizedCaseInsensitiveCompare(appDisplayName(for: rhs)) == .orderedAscending
+        }
+    }
+
+    private func binding(for device: AudioDevice) -> Binding<Bool> {
+        Binding(
+            get: { manager.selectedOutputDeviceIDs.contains(device.id) },
+            set: { isOn in
+                if isOn {
+                    manager.selectedOutputDeviceIDs.insert(device.id)
+                } else {
+                    manager.selectedOutputDeviceIDs.remove(device.id)
+                }
+            }
+        )
+    }
+
+    private func iconName(for device: AudioDevice) -> String {
+        let name = device.name.lowercased()
+        if name.contains("airpods") { return "airpodspro" }
+        if name.contains("headphone") || name.contains("beats") { return "headphones" }
+        if name.contains("macbook") { return "laptopcomputer" }
+        if name.contains("display") || name.contains("tv") { return "tv" }
+        return "hifispeaker"
+    }
+}
+
+private struct MultiAudioAppControlRow: View {
+    let bundleID: String
+    let revision: Int
+    @State private var isExpanded = false
+
+    private let frequencies = ["32", "64", "125", "250", "500", "1K", "2K", "4K", "8K", "16K"]
+
+    var body: some View {
+        DisclosureGroup(isExpanded: $isExpanded) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Volume")
+                    Slider(value: volumeBinding, in: 0...1, step: 0.01)
+                    Text("\(Int(PerAppAudioController.shared.volume(for: bundleID) * 100))%")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .frame(width: 42, alignment: .trailing)
+                }
+
+                Toggle("Mute", isOn: muteBinding)
+                    .toggleStyle(.switch)
+
+                Divider()
+
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Equalizer")
+                        Spacer()
+                        Button("Flat") {
+                            PerAppAudioController.shared.setEQGains(Array(repeating: 0.0, count: 10), for: bundleID)
+                        }
+                        .buttonStyle(.borderless)
+                    }
+
+                    ForEach(Array(frequencies.enumerated()), id: \.offset) { index, label in
+                        HStack(spacing: 10) {
+                            Text(label)
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                                .frame(width: 32, alignment: .trailing)
+                            Slider(value: eqBinding(at: index), in: -12...12, step: 0.5)
+                            Text("\(PerAppAudioController.shared.eqGains(for: bundleID)[safe: index] ?? 0, specifier: "%+.1f")")
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                                .frame(width: 48, alignment: .trailing)
+                        }
+                    }
+                }
+            }
+            .padding(.top, 10)
+        } label: {
+            HStack(spacing: 12) {
+                appIcon(for: bundleID)
+                    .resizable()
+                    .frame(width: 28, height: 28)
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(appDisplayName(for: bundleID))
+                        .font(.system(size: 13, weight: .medium))
+                    Text(bundleID)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                if PerAppAudioController.shared.mute(for: bundleID) {
+                    Image(systemName: "speaker.slash.fill")
+                        .foregroundStyle(.red)
+                } else {
+                    Text("\(Int(PerAppAudioController.shared.volume(for: bundleID) * 100))%")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var volumeBinding: Binding<Double> {
+        Binding(
+            get: { PerAppAudioController.shared.volume(for: bundleID) },
+            set: { PerAppAudioController.shared.setVolume($0, for: bundleID) }
+        )
+    }
+
+    private var muteBinding: Binding<Bool> {
+        Binding(
+            get: { PerAppAudioController.shared.mute(for: bundleID) },
+            set: { PerAppAudioController.shared.setMute($0, for: bundleID) }
+        )
+    }
+
+    private func eqBinding(at index: Int) -> Binding<Double> {
+        Binding(
+            get: { PerAppAudioController.shared.eqGains(for: bundleID)[safe: index] ?? 0.0 },
+            set: { newValue in
+                var gains = PerAppAudioController.shared.eqGains(for: bundleID)
+                while gains.count < 10 { gains.append(0.0) }
+                gains[index] = newValue
+                PerAppAudioController.shared.setEQGains(gains, for: bundleID)
+            }
+        )
+    }
+}
+
+private func appDisplayName(for bundleID: String) -> String {
+    if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID }) {
+        return app.localizedName ?? bundleID
+    }
+    if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+        return FileManager.default.displayName(atPath: url.path).replacingOccurrences(of: ".app", with: "")
+    }
+    return bundleID
+}
+
+private func appIcon(for bundleID: String) -> Image {
+    let icon: NSImage
+    if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID }), let url = app.bundleURL {
+        icon = NSWorkspace.shared.icon(forFile: url.path)
+    } else if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+        icon = NSWorkspace.shared.icon(forFile: url.path)
+    } else {
+        icon = NSWorkspace.shared.icon(for: .application)
+    }
+    return Image(nsImage: icon)
+}
+
+private extension Array {
+    subscript(safe index: Index) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
 
@@ -4083,20 +4500,6 @@ struct About: View {
                 HStack(spacing: 30) {
                     Spacer(minLength: 0)
                     Button {
-                        NSWorkspace.shared.open(sponsorPage)
-                    } label: {
-                        VStack(spacing: 5) {
-                            Image(systemName: "cup.and.saucer.fill")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(.primary)
-                                .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
-                            Text("Donate")
-                                .foregroundStyle(.primary)
-                        }
-                        .contentShape(Rectangle())
-                    }
-                    Spacer(minLength: 0)
-                    Button {
                         NSWorkspace.shared.open(productPage)
                     } label: {
                         VStack(spacing: 5) {
@@ -4114,11 +4517,6 @@ struct About: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                Text("Your support funds software development learning for students in 9th–12th grade.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.bottom, 5)
 
                 Section {
                     ForEach(UpdateChannel.availableChannels) { channel in
@@ -4161,7 +4559,7 @@ struct About: View {
                 VStack(spacing: 0) {
                     Divider()
                         .padding(.bottom, 5)
-                    Text("Made with ❤️ by Ebullioscopic")
+                    Text("Made with ❤️ by Bytesphere")
                         .foregroundStyle(.secondary)
                         .padding(.bottom, 7)
                         .multilineTextAlignment(.center)

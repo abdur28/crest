@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -599,7 +600,7 @@ final class LocalSendService: NSObject, ObservableObject {
 
     private func sendAnnouncement() {
         let payload: [String: Any] = [
-            "alias": Host.current().localizedName ?? "Atoll",
+            "alias": Host.current().localizedName ?? "Crest",
             "version": "2.1",
             "deviceModel": "Mac",
             "deviceType": "desktop",
@@ -726,7 +727,7 @@ final class LocalSendService: NSObject, ObservableObject {
             }
 
             let responseJSON: [String: Any] = [
-                "alias": Host.current().localizedName ?? "Atoll",
+                "alias": Host.current().localizedName ?? "Crest",
                 "version": "2.1",
                 "deviceModel": "Mac",
                 "deviceType": "desktop",
@@ -740,7 +741,7 @@ final class LocalSendService: NSObject, ObservableObject {
 
         if method == "GET", path == "/api/localsend/v2/info" {
             let responseJSON: [String: Any] = [
-                "alias": Host.current().localizedName ?? "Atoll",
+                "alias": Host.current().localizedName ?? "Crest",
                 "version": "2.1",
                 "deviceModel": "Mac",
                 "deviceType": "desktop",
@@ -887,7 +888,7 @@ final class LocalSendService: NSObject, ObservableObject {
 
         let payload: [String: Any] = [
             "info": [
-                "alias": Host.current().localizedName ?? "Atoll",
+                "alias": Host.current().localizedName ?? "Crest",
                 "version": "2.1",
                 "deviceModel": "Mac",
                 "deviceType": "desktop",

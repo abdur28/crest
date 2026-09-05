@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -60,41 +61,21 @@ struct TabSelectionView: View {
     @Default(.showMirror) private var showMirror
     @Default(.showStandardMediaControls) private var showStandardMediaControls
     @Default(.enableMinimalisticUI) private var enableMinimalisticUI
+    @Default(.notchHeaderItemOrder) private var notchHeaderItemOrder
     @Namespace var animation
     
     private var tabs: [TabModel] {
         var tabsArray: [TabModel] = []
 
-        if homeTabVisible {
-            tabsArray.append(TabModel(label: "Home", icon: "house.fill", view: .home))
+        // Tab order is derived from the unified header-item order (the single
+        // source of truth the user reorders in Settings → Notch Header).
+        let order = NotchHeaderItem.sanitized(notchHeaderItemOrder).compactMap { $0.tab }
+        for tab in order {
+            if let model = tabModel(for: tab) {
+                tabsArray.append(model)
+            }
         }
 
-        if Defaults[.dynamicShelf] {
-            tabsArray.append(TabModel(label: "Shelf", icon: "tray.fill", view: .shelf))
-        }
-        
-        if enableTimerFeature && timerDisplayMode == .tab {
-            tabsArray.append(TabModel(label: "Timer", icon: "timer", view: .timer))
-        }
-
-        // Stats tab only shown when stats feature is enabled
-        if Defaults[.enableStatsFeature] {
-            tabsArray.append(TabModel(label: "Stats", icon: "chart.xyaxis.line", view: .stats))
-        }
-
-        // Usage tab only shown when LLM usage feature is enabled
-        if Defaults[.enableLLMUsageFeature] {
-            tabsArray.append(TabModel(label: "Usage", icon: "chart.bar.doc.horizontal", view: .llmUsage))
-        }
-
-        if Defaults[.enableNotes] || (Defaults[.enableClipboardManager] && Defaults[.clipboardDisplayMode] == .separateTab) {
-            let label = Defaults[.enableNotes] ? "Notes" : "Clipboard"
-            let icon = Defaults[.enableNotes] ? "note.text" : "doc.on.clipboard"
-            tabsArray.append(TabModel(label: label, icon: icon, view: .notes))
-        }
-        if Defaults[.enableTerminalFeature] {
-            tabsArray.append(TabModel(label: "Terminal", icon: "apple.terminal", view: .terminal))
-        }
         if extensionTabsEnabled {
             for payload in extensionTabPayloads {
                 guard let tab = payload.descriptor.tab else { continue }
@@ -113,6 +94,43 @@ struct TabSelectionView: View {
         }
         return tabsArray
     }
+
+    /// Builds the tab-bar entry for a fixed tab, or `nil` when its feature is
+    /// disabled. Preserves the exact gating each tab had before ordering existed.
+    private func tabModel(for tab: NotchTab) -> TabModel? {
+        switch tab {
+        case .home:
+            guard homeTabVisible else { return nil }
+            return TabModel(label: "Home", icon: "house.fill", view: .home)
+        case .music:
+            guard Defaults[.showMusicInNotch] else { return nil }
+            return TabModel(label: "Music", icon: "music.note", view: .music)
+        case .multiAudio:
+            guard Defaults[.showMultiAudioInNotch] else { return nil }
+            return TabModel(label: "Multi-Audio", icon: "hifispeaker.2.fill", view: .multiAudio)
+        case .shelf:
+            guard Defaults[.dynamicShelf] else { return nil }
+            return TabModel(label: "Shelf", icon: "tray.fill", view: .shelf)
+        case .timer:
+            guard enableTimerFeature && timerDisplayMode == .tab else { return nil }
+            return TabModel(label: "Timer", icon: "timer", view: .timer)
+        case .stats:
+            guard Defaults[.enableStatsFeature] else { return nil }
+            return TabModel(label: "Stats", icon: "chart.xyaxis.line", view: .stats)
+        case .usage:
+            guard Defaults[.enableLLMUsageFeature] else { return nil }
+            return TabModel(label: "Usage", icon: "chart.bar.doc.horizontal", view: .llmUsage)
+        case .notes:
+            guard Defaults[.enableNotes] || (Defaults[.enableClipboardManager] && Defaults[.clipboardDisplayMode] == .separateTab) else { return nil }
+            let label = Defaults[.enableNotes] ? "Notes" : "Clipboard"
+            let icon = Defaults[.enableNotes] ? "note.text" : "doc.on.clipboard"
+            return TabModel(label: label, icon: icon, view: .notes)
+        case .terminal:
+            guard Defaults[.enableTerminalFeature] else { return nil }
+            return TabModel(label: "Terminal", icon: "apple.terminal", view: .terminal)
+        }
+    }
+
     var body: some View {
         HStack(spacing: 24) {
             ForEach(Array(tabs.enumerated()), id: \.element.id) { idx, tab in
@@ -176,6 +194,12 @@ struct TabSelectionView: View {
 
     private func ensureValidSelection(with tabs: [TabModel]) {
         guard !tabs.isEmpty else { return }
+        // The Music view is opened from the header button, not the tab bar, so it
+        // is intentionally absent from `tabs`. Leave it selected rather than
+        // snapping back to the first tab (which broke "Remember last tab").
+        if coordinator.currentView == .music {
+            return
+        }
         if tabs.contains(where: { isSelected($0) }) {
             return
         }

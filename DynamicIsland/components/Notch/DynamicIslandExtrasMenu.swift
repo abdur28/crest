@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,15 +62,6 @@ struct DynamicIslandExtrasMenu : View {
         )
     }
     
-    var donate: some View {
-        DynamicIslandLargeButtons(
-            action: {
-                NSWorkspace.shared.open(sponsorPage)
-            },
-            icon: Image(systemName: "heart.fill"),
-            title: "Love Us"
-        )
-    }
     
     var settings: some View {
         Button(action: {

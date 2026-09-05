@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  * Adapted from SwiftTerm (https://github.com/migueldeicaza/SwiftTerm)
  *
  * This program is free software: you can redistribute it and/or modify

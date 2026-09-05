@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -27,7 +28,14 @@ final class CheckForUpdatesViewModel: ObservableObject {
     @Published var canCheckForUpdates = false
 
     init(updater: SPUUpdater) {
+        // Sparkle can fire `canCheckForUpdates` KVO notifications off the main
+        // thread during its launch update-check. Because this view model drives
+        // a Button inside the MenuBarExtra (an NSMenu attached to the main menu),
+        // an off-main `@Published` change makes SwiftUI mutate that menu off the
+        // main thread, tripping the `-[NSMenu _lockForMainMenuItemArray]`
+        // assertion. Hop to the main thread before publishing.
         updater.publisher(for: \.canCheckForUpdates)
+            .receive(on: DispatchQueue.main)
             .assign(to: &$canCheckForUpdates)
     }
 }

@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -138,7 +139,17 @@ struct ContentView: View {
         ) {
             return size
         }
-        
+
+        // The Music tab reuses the Home layout but gets extra width to breathe.
+        if coordinator.currentView == .music {
+            let musicTabExtraWidth: CGFloat = 180
+            let widened = CGSize(width: baseSize.width + musicTabExtraWidth, height: baseSize.height)
+            return inlineLyricsAdjustedNotchSize(
+                from: widened,
+                isHomeTabActive: vm.notchState == .open
+            )
+        }
+
         // Handle battery HUD expansion sizing
         if vm.notchState == .closed && 
            coordinator.expandingView.show && 
@@ -172,6 +183,10 @@ struct ContentView: View {
             }
         }
         
+        if coordinator.currentView == .multiAudio {
+            return CGSize(width: max(baseSize.width, 640), height: max(baseSize.height, 320))
+        }
+
         if coordinator.currentView == .timer {
             return CGSize(width: baseSize.width, height: 250) // Extra height for timer presets
         }
@@ -1237,6 +1252,10 @@ struct ContentView: View {
                           switch coordinator.currentView {
                               case .home:
                                   NotchHomeView(albumArtNamespace: albumArtNamespace)
+                              case .music:
+                                  NotchMusicView(albumArtNamespace: albumArtNamespace)
+                              case .multiAudio:
+                                  NotchMultiAudioView()
                               case .shelf:
                                   NotchShelfView()
                               case .timer:

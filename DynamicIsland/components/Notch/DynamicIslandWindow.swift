@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -27,7 +28,7 @@ class DynamicIslandWindow: NSPanel {
         .fullScreenAuxiliary,
         .canJoinAllSpaces,
         .ignoresCycle,
-        .stationary,
+        // .stationary,  // disabled: excludes the notch from Space-switch animations
     ]
 
     override init(

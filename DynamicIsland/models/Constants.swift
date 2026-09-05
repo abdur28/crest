@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -941,7 +942,41 @@ extension Defaults.Keys {
     static let automaticallySwitchDisplay = Key<Bool>("automaticallySwitchDisplay", default: true)
     static let releaseName = Key<String>("releaseName", default: "Kaafu")
     static let hideDynamicIslandFromScreenCapture = Key<Bool>("hideDynamicIslandFromScreenCapture", default: false)
-    
+
+        // MARK: Caffeinate (Keep Awake)
+    /// Whether keep-awake is currently engaged. Persisted so the state survives relaunches.
+    static let caffeinateEnabled = Key<Bool>("caffeinateEnabled", default: false)
+    /// Auto-off timeout in minutes. 0 means indefinite (stays awake until turned off).
+    static let caffeinateTimeoutMinutes = Key<Double>("caffeinateTimeoutMinutes", default: 0)
+    /// When true, also prevents the display from sleeping; otherwise only the system is kept awake.
+    static let caffeinateKeepDisplayAwake = Key<Bool>("caffeinateKeepDisplayAwake", default: true)
+    /// Whether to show the Keep Awake toggle button in the expanded notch header.
+    static let showCaffeineInNotch = Key<Bool>("showCaffeineInNotch", default: true)
+    /// Whether to show the Music button (opens the Music tab) in the expanded notch header.
+    static let showMusicInNotch = Key<Bool>("showMusicInNotch", default: true)
+    /// Whether to show the Multi-Audio mixer tab in the expanded notch header.
+    static let showMultiAudioInNotch = Key<Bool>("showMultiAudioInNotch", default: true)
+    /// Whether to show the Pin button (keeps the notch open) in the expanded notch header.
+    static let showPinInNotch = Key<Bool>("showPinInNotch", default: true)
+    /// Whether the notch is pinned open (auto-close suppressed by the user).
+    static let notchPinned = Key<Bool>("notchPinned", default: false)
+    /// Left-to-right order of the buttons in the expanded notch header.
+    static let notchHeaderButtonOrder = Key<[NotchHeaderButton]>(
+        "notchHeaderButtonOrder",
+        default: NotchHeaderButton.defaultOrder
+    )
+    /// Left-to-right order of the tabs in the notch's tab bar.
+    static let notchTabOrder = Key<[NotchTab]>(
+        "notchTabOrder",
+        default: NotchTab.defaultOrder
+    )
+    /// Unified order of every notch-header item (tabs + buttons), split by the
+    /// `spacer` (the physical notch). Single source of truth for header layout.
+    static let notchHeaderItemOrder = Key<[NotchHeaderItem]>(
+        "notchHeaderItemOrder",
+        default: NotchHeaderItem.defaultOrder
+    )
+
         // MARK: Behavior
     static let minimumHoverDuration = Key<TimeInterval>("minimumHoverDuration", default: 0.3)
     static let enableHaptics = Key<Bool>("enableHaptics", default: true)

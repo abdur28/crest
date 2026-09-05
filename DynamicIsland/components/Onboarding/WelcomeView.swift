@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * Originally from boring.notch project
  * Modified and adapted for Atoll (DynamicIsland)
@@ -41,7 +42,7 @@ struct WelcomeView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
                         .padding(.bottom, 8)
-                    Text("Atoll")
+                    Text("Crest")
                         .font(.system(.largeTitle, design: .default))
                         .fontWeight(.semibold)
                     Text("Welcome")
@@ -76,7 +77,7 @@ struct WelcomeView: View {
                     
                     // Privacy Policy Link
                     Button(action: {
-                        if let url = URL(string: "https://ebullioscopic.github.io/DynamicIsland/privacy-policy") {
+                        if let url = URL(string: "https://github.com/abdur28/crest-updates/blob/main/PRIVACY.md") {
                             NSWorkspace.shared.open(url)
                         }
                     }) {

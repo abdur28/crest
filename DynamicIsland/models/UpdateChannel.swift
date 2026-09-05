@@ -1,6 +1,7 @@
 /*
  * Atoll (DynamicIsland)
  * Copyright (C) 2024-2026 Atoll Contributors
+ * Modified 2026 by Bytesphere. Distributed as "Crest".
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +51,7 @@ enum UpdateChannel: String, CaseIterable, Identifiable, Codable, Defaults.Serial
     }
 
     var feedURL: URL {
-        let base = "https://raw.githubusercontent.com/Ebullioscopic/Atoll/main/Updates"
+        let base = "https://raw.githubusercontent.com/abdur28/crest-updates/main"
         switch self {
         case .stable:  return URL(string: "\(base)/appcast.xml")!
         case .beta:    return URL(string: "\(base)/appcast-beta.xml")!
